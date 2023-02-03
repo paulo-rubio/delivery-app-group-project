@@ -29,8 +29,7 @@ const stringfiedData = JSON.stringify(testClient);
 const id = `${testClient.role}_orders__element-order-id-${product.data[0].id}`;
 const status = `${testClient.role}_orders__element-delivery-status-${product.data[0].id}`;
 const date = `${testClient.role}_orders__element-order-date-${product.data[0].id}`;
-const totalPrice = `${testClient.role}_orders_
-_element-delivery-status-${product.data[0].id}`;
+const totalPrice = `${testClient.role}_orders__element-card-price-${product.data[0].id}`;
 const address = `${testSeller.role}_orders__element-card-address-${product.data[0].id}`;
 
 jest.mock('axios');
