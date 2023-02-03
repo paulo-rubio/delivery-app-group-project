@@ -3,12 +3,29 @@ import * as axios from 'axios';
 import App from '../App';
 import renderWithRouterAndRedux from './utils/renderWithRouter';
 
-const product = {
-  data: [{ id: 1,
+const order = {
+  data: [{
+    deliveryAddress: 'Rua Irmãos Monteiro, Bairo Pedras',
+    deliveryNumber: '123',
+    id: 1,
+    products: {
+      id: 1,
+      name: 'Skol Lata 250ml',
+      price: '2.20',
+      urlImage: 'http://localhost:3001/images/skol_lata_350ml.jpg',
+    },
+    sale: {
+      email: 'fulana@deliveryapp.com',
+      id: 2,
+      name: 'Fulana Pereira',
+      password: '3c28d2b0881bf46457a853e0b07531c6',
+      role: 'seller',
+    },
     status: 'Pendente',
     saleDate: '01/02/2023',
     totalPrice: '22.81',
-    deliveryAddress: 'Rua Irmãos Monteiro, Bairo Pedras' }],
+    sellerId: 2,
+  }],
 };
 
 const testClient = {
@@ -26,11 +43,11 @@ const testSeller = {
 };
 
 const stringfiedData = JSON.stringify(testClient);
-const id = `${testClient.role}_orders__element-order-id-${product.data[0].id}`;
-const status = `${testClient.role}_orders__element-delivery-status-${product.data[0].id}`;
-const date = `${testClient.role}_orders__element-order-date-${product.data[0].id}`;
-const totalPrice = `${testClient.role}_orders__element-card-price-${product.data[0].id}`;
-const address = `${testSeller.role}_orders__element-card-address-${product.data[0].id}`;
+const id = `${testClient.role}_orders__element-order-id-${order.data[0].id}`;
+const status = `${testClient.role}_orders__element-delivery-status-${order.data[0].id}`;
+const date = `${testClient.role}_orders__element-order-date-${order.data[0].id}`;
+const totalPrice = `${testClient.role}_orders__element-card-price-${order.data[0].id}`;
+const address = `${testSeller.role}_orders__element-card-address-${order.data[0].id}`;
 
 jest.mock('axios');
 describe('testing in customer orders', () => {
@@ -41,10 +58,10 @@ describe('testing in customer orders', () => {
     );
   });
   test('testing in customer', async () => {
-    axios.request.mockResolvedValue(product);
+    axios.request.mockResolvedValue(order);
     const { getByTestId, history } = renderWithRouterAndRedux(<App />);
     await act(async () => { history.push(`/${testClient.role}/orders`); });
-
+    console.log(id);
     const getID = getByTestId(id);
     const getStatus = getByTestId(status);
     const getDate = getByTestId(date);
@@ -56,7 +73,7 @@ describe('testing in customer orders', () => {
     expect(getPrice).toBeDefined();
   });
   test('testing in custumer orders ', async () => {
-    axios.request.mockResolvedValue(product);
+    axios.request.mockResolvedValue(order);
     const { getByTestId, history } = renderWithRouterAndRedux(<App />);
 
     await act(async () => { history.push(`/${testSeller.role}/orders`); });
@@ -64,4 +81,22 @@ describe('testing in customer orders', () => {
     const getaddress = getByTestId(address);
     expect(getaddress).toBeDefined();
   });
+  // test('testing in custumer orders ', async () => {
+  //   axios.request.mockResolvedValue(order);
+  //   const { getByTestId, history, getAllByRole } = renderWithRouterAndRedux(<App />);
+
+  //   await act(async () => { history.push(`/customer/orders/${order.data[0].id}`); });
+
+  //   const getNumber = getByTestId(tablenumber);
+  //   const getname = getByTestId(tablename);
+  //   const getqnt = getByTestId(tableqnt);
+  //   const getPrice = getByTestId(tableprice);
+  //   const getTotalPrice = getByTestId(tabletotal);
+
+  //   expect(getNumber).toBeDefined();
+  //   expect(getname).toBeDefined();
+  //   expect(getqnt).toBeDefined();
+  //   expect(getPrice).toBeDefined();
+  //   expect(getTotalPrice).toBeDefined();
+  // });
 });

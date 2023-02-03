@@ -25,7 +25,7 @@ const tableName = 'customer_checkout__element-order-table-name-0';
 const tableQnt = 'customer_checkout__element-order-table-quantity-0';
 const tableValueUnit = 'customer_checkout__element-order-table-unit-price-0';
 const tabelTotalPrice = 'customer_checkout__element-order-table-sub-total-0';
-const remove = 'customer_checkout__element-order-table-remove-0';
+// const remove = 'customer_checkout__element-order-table-remove-0';
 
 const inputAdress = 'customer_checkout__input-address';
 const inputAdresnumber = 'customer_checkout__input-address-number';
@@ -80,7 +80,21 @@ describe('testing in admManager', () => {
     expect(seller).toBeDefined();
     expect(submit).toBeDefined();
   });
-  test('in cartProduct', () => {
+  // test('in cartProduct', async () => {
+  //   axios.request.mockResolvedValue(products);
+  //   const { getByTestId, history } = renderWithRouterAndRedux(<App />);
 
-  });
+  //   await act(async () => { history.push(rote); });
+  //   const name = getByTestId(tableName);
+  //   const item = getByTestId(tableItem);
+  //   const qnt = getByTestId(tableQnt);
+  //   const valueUnit = getByTestId(tableValueUnit);
+  //   const totalPrice = getByTestId(tabelTotalPrice);
+
+  //   expect(name).toBeDefined();
+  //   expect(item).toBeDefined();
+  //   expect(qnt).toBeDefined();
+  //   expect(valueUnit).toBeDefined();
+  //   expect(totalPrice).toBeDefined();
+  // });
 });

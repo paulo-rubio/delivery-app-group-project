@@ -49,6 +49,7 @@ function OrderTable({ products, role }) {
             <td
               data-testid={
                 `${role}_order_details__element-order-table-sub-total-${index}`
+
               }
             >
               {`R$ ${priceFormatter

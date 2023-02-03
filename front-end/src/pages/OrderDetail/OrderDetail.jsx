@@ -62,7 +62,7 @@ function OrderDetail() {
   }
 
   const data = updatedResponse?.data[0] || apiResponse.data[0];
-
+  console.log(apiResponse);
   return (
     <div>
       <Header />
