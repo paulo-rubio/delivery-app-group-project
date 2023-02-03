@@ -11,7 +11,7 @@ function CartProduct({ product, index }) {
   const handleRemove = (productData) => {
     dispatch(removeItem(productData.id));
   };
-
+  console.log(product);
   return (
     <tr className={ styles['table-tr'] }>
       <td

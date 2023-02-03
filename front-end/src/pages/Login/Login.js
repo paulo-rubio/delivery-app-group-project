@@ -46,6 +46,7 @@ function Login() {
       } = await axios.post('http://localhost:3001/login', data, {
         port: BACKEND_PORT,
       });
+      console.log(response);
       if (status !== SUCCESS) {
         throw new Error(response?.message);
       }

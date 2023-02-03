@@ -6,6 +6,7 @@ import { Link, useRouteMatch } from 'react-router-dom';
 import styles from './Card.module.css';
 
 function CardSales({ order, role, dataTestid }) {
+  console.log(dataTestid);
   const { id, status, saleDate, totalPrice, deliveryAddress, deliveryNumber } = order;
   const match = useRouteMatch();
 

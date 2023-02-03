@@ -20,6 +20,7 @@ function OrderDetail() {
     params: { id },
   } = useRouteMatch();
   const userData = useMemo(() => getLocalStorage('user'), []);
+  console.log(id);
   const fetchOptions = useMemo(
     () => ({
       method: 'get',
