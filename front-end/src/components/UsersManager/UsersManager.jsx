@@ -17,7 +17,7 @@ function UsersManager({ refetch, setRefetch }) {
 
   const [data, isLoading] = useFetch(fetchOptions);
   const datas = data?.data;
-
+  console.log(data);
   const handleClick = (async (userId) => {
     try {
       const config = {
