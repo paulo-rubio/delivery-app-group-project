@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
+const source = axios.CancelToken.source();
 const useFetch = (options) => {
   const [requestState, setRequestState] = useState({
     data: [],
@@ -24,6 +25,11 @@ const useFetch = (options) => {
       }
     };
     fetchData();
+    return () => {
+      if (source) {
+        source.cancel();
+      }
+    };
   }, [options]);
   return [
     requestState.data,

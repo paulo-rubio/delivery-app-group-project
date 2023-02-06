@@ -20,7 +20,6 @@ function OrderDetail() {
     params: { id },
   } = useRouteMatch();
   const userData = useMemo(() => getLocalStorage('user'), []);
-  console.log(id);
   const fetchOptions = useMemo(
     () => ({
       method: 'get',
@@ -62,7 +61,6 @@ function OrderDetail() {
   }
 
   const data = updatedResponse?.data[0] || apiResponse.data[0];
-  console.log(apiResponse);
   return (
     <div>
       <Header />

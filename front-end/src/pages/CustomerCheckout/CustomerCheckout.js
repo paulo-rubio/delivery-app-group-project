@@ -8,6 +8,7 @@ import styles from './CustomerCheckout.module.css';
 
 function CustomerCheckout() {
   const { cartProducts } = useSelector((store) => store.cart);
+  console.log(cartProducts, 'produtos');
   const totalPrice = useMemo(() => calculateTotalPrice(cartProducts), [cartProducts]);
   return (
     <div className={ styles['checkout-page'] }>

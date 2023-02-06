@@ -1,4 +1,5 @@
-import { waitFor, act, fireEvent } from '@testing-library/react';
+import { waitFor, act, fireEvent, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as axios from 'axios';
 import App from '../App';
 import renderWithRouterAndRedux from './utils/renderWithRouter';
@@ -26,22 +27,18 @@ const order = { data: [{
   totalPrice: '22.81',
   sellerId: 2,
 }] };
+const buttonPreparando = 'seller_order_details__button-preparing-check';
+const buttonEmTransito = 'seller_order_details__button-dispatch-check';
+// const EmTransito = 'seller_order_details__element-order-details-label-delivery-status';
 
-const testClient = {
-  name: 'Cliente zika',
-  email: 'cliente@hotmail.com',
-  token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQ2xpZW50ZSB6aWthIiwiZW1haWwiOiJjbGllbnRlQGhvdG1haWwuY29tIiwicm9sZSI6ImN1c3RvbWVyIiwiaWF0IjoxNjc1NDM3OTYwLCJleHAiOjE2NzcxNjU5NjB9.BEjzLfadBy_yRyMkSubO7-vwYB0nePJorJjrGQxOJ8k',
-  role: 'customer',
+const testSeller = {
+  name: 'Vendedor zika',
+  email: 'vendedor@hotmail.com',
+  token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiVmVuZGVkb3IgemlrYSIsImVtYWlsIjoidmVuZGVkb3JAaG90bWFpbC5jb20iLCJyb2xlIjoic2VsbGVyIiwiaWF0IjoxNjc1NDM4NjIyLCJleHAiOjE2NzcxNjY2MjJ9.o4i_98YbTn-w1wcHFZzcgshHoS3y2FiMtMmqOXx0fUs',
+  role: 'seller',
 };
-
-const stringfiedData = JSON.stringify(testClient);
-
-const tablenumber = `${testClient.role}_order_details__element-order-table-item-number-0`;
-const tablename = `${testClient.role}_order_details__element-order-table-name-0`;
-const tableqnt = `${testClient.role}_order_details__element-order-table-quantity-0`;
-const tableprice = `${testClient.role}_order_details__element-order-table-unit-price-0`;
-const tabletotal = `${testClient.role}_order_details__element-order-table-sub-total-0`;
-const rote = `/customer/orders/${order.data[0].id}`;
+const stringfiedData = JSON.stringify(testSeller);
+const rote = `/seller/orders/${order.data[0].id}`;
 
 jest.mock('axios');
 describe('testing in order detail', () => {
@@ -75,19 +72,14 @@ describe('testing in order detail', () => {
     const page = renderWithRouterAndRedux(<App />);
     page.history.push(rote);
 
-    const { findByTestId } = page;
-    const getNumber = findByTestId(tablenumber);
-    const getName = findByTestId(tablename);
-    const getQuantity = findByTestId(tableqnt);
-    const getUnityValue = findByTestId(tableprice);
-    const getTotal = findByTestId(tabletotal);
-    expect(getNumber).toBeDefined();
-    expect(getName).toBeDefined();
-    expect(getQuantity).toBeDefined();
-    expect(getUnityValue).toBeDefined();
-    expect(getTotal).toBeDefined();
+    const status = await screen.findByText('Pendente');
+
+    // const { findByTestId } = page;
+    const preparando = await screen.findByTestId(buttonPreparando);
+    const entregue = await screen.findByTestId(buttonEmTransito);
+    expect(status).toBeDefined();
+    act(() => { userEvent.click(preparando); });
+
+    act(() => { fireEvent.click(entregue); });
   });
 });
-
-// problema que não consigo testar as tabelas.
-// problemas com data-test
