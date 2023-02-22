@@ -74,7 +74,7 @@ describe('Route /users', () => {
     expect(chaiHttpResponse.body).to.be.deep.equal({ error: "User already registered" })
   })
 
-  it('user already exists', async () => {
+  it('POST should throw an error: user already exists', async () => {
     sinon.stub(User, "create").resolves({ email: 'foo@bar.com' });
     sinon.stub(User, "findOne").resolves({ email: "foo@bar.com" });
     sinon.stub(jwt, "sign").returns('token_valido');
@@ -86,49 +86,15 @@ describe('Route /users', () => {
     expect(chaiHttpResponse.body).to.be.deep.equal({ error: "User already registered" })
   })
 
-  // it('is not possible to create an user that already exists', async () => {
-
-  //   chaiHttpResponse = await chai
-  //     .request(app)
-  //     .post('/login')
-  //     .send({ email: 'adm@deliveryapp.com', password: '--adm2@21!!--' })
-  //   expect(chaiHttpResponse.status).to.be.equal(200)
-
-  //  chaiHttpResponse = await chai
-  //   .request(app)
-  //   .post('/users')
-  //   .send( { email: 'fulana@deliveryapp.com', name: "Fulana Pereira", password: 'fulana@123' })
-  //   expect(chaiHttpResponse.status).to.be.equal(409);
-  // })
-  // it('is possible to delete an user', async () => {
-  //   sinon.stub(JWT, 'sign').returns('token');
-  //   chaiHttpResponse = await chai
-  //     .request(app)
-  //     .post('/login')
-  //     .send({ email: 'adm@deliveryapp.com', password: '--adm2@21!!--' })
-  //   expect(chaiHttpResponse.status).to.be.equal(200)
-
-  //   sinon.stub(JWT, 'verify').returns('token');
-  //  chaiHttpResponse = await chai
-  //    .request(app)
-  //    .delete('/users')
-  //   .send({
-  //     "id": "3"
-  //   })
-  //   expect(chaiHttpResponse.status).to.be.equal(200);
-  // })
-  // it('is not possible to create an user without a deafult name', async () => {
-
-  //   chaiHttpResponse = await chai
-  //     .request(app)
-  //     .post('/login')
-  //     .send({ email: 'adm@deliveryapp.com', password: '--adm2@21!!--' })
-  //   expect(chaiHttpResponse.status).to.be.equal(200)
-
-  //  chaiHttpResponse = await chai
-  //   .request(app)
-  //   .post('/users')
-  //   .send( { email: 'batata545453@gmail.com', name: "", password: '1234567' })
-  //   expect(chaiHttpResponse.status).to.be.equal(409);
-  // })
+  it('POST catches an error', async () => {
+    sinon.stub(User, "create").resolves({ email: 'foo@bar.com' });
+    sinon.stub(User, "findOne").rejects({ email: "foo@bar.com" });
+    sinon.stub(jwt, "sign").returns('token_valido');
+    const chaiHttpResponse = await chai
+      .request(app)
+      .post('/users')
+      .send({ name: 'Zequinha', email: 'foo@bar.com', password: 'fizzbuzz' })
+    expect(chaiHttpResponse.status).to.be.equal(404)
+    expect(chaiHttpResponse.body).to.be.deep.equal({})
+  })
 })
