@@ -46,9 +46,7 @@ function AdminRegister({ setRefetch }) {
       const data = await axios.post('http://localhost:3001/users', formData, config);
       setRefetch((prevState) => !prevState);
       reset();
-      console.log(data);
     } catch (error) {
-      console.log(error);
       handleError(error);
     }
   };

@@ -9,14 +9,12 @@ const createToken = (data) => {
     expiresIn: '99d',
     algorithm: 'HS256',
   });
-  console.log('createToken', token);
   return token;
 };
 
 const validatedToken = (token) => {
   try {
     const { data } = jwt.verify(token, jwtKey);
-    console.log('verify', data);
     return data;
   } catch (_e) {
     const error = new Error('Token Invalido');

@@ -15,11 +15,7 @@ const requestId = async (req, res, next) => {
     const token = req.headers.authorization;
     const data = await serviceCheckout.createSale(req.body, token);
     return res.status(201).json({ message: 'created', response: data });
-    // const body = req.body;
-    // console.log(body);
-    // return res.status(201).json({ body });
   } catch (err) {
-    console.log(err);
     next(err);
   }
 };
@@ -32,13 +28,11 @@ const getAll = async (req, res) => {
     const sales = await serviceCheckout.getAllService(id, role);
     return res.status(200).json(sales);
   } catch (e) {
-    console.log(e.message);
     res.status(500).json({ message: ERROR_MESSAGE });
   }
 };
 
 const updateStatus = async (req, res) => {
-  console.log('ouch');
   try {
     const { id } = req.params;
     const { status } = req.body;
@@ -47,7 +41,6 @@ const updateStatus = async (req, res) => {
 
     res.status(200).json(updatedStatus);
   } catch (e) {
-    console.log(e.message);
     res.status(500).json({ message: ERROR_MESSAGE });
   }
 };
@@ -58,7 +51,6 @@ const getOne = async (req, res) => {
     const sales = await serviceCheckout.getOneService(id);
     return res.status(200).json(sales);
   } catch (e) {
-    console.log(e.message);
     res.status(500).json({ message: ERROR_MESSAGE });
   }
 };

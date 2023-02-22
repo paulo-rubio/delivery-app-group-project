@@ -27,7 +27,7 @@ const createSale = async (body, token) => {
     await createSaleProducts(products, data.id);
     return { data };
   } catch (err) {
-    console.log(err);
+    console.log('err');
   }
 };
 
@@ -56,7 +56,6 @@ const getOneService = async (id) => {
 };
 
 const updateStatusService = async (id, status) => {
-  console.log(id, status);
   try {
     const sale = await Sale.findByPk(id);
     await sale.update(

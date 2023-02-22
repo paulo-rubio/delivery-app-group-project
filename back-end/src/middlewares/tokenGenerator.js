@@ -7,4 +7,6 @@ const jwtConfig = {
 
 const secretKey = 'secret_key';
 
+
+
 module.exports = (user) => jwt.sign(user.dataValues, secretKey, jwtConfig);
