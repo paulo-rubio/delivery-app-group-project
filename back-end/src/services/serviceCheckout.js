@@ -28,16 +28,12 @@ const createSale = async (body, token) => {
 };
 
 const getAllService = async (id, role) => {
-  try {
-    if (role === 'seller') {
-      const sales = await Sale.findAll();
-      return sales;
-    }
-    const sales = await Sale.findAll({ where: { userId: id } });
+  if (role === 'seller') {
+    const sales = await Sale.findAll();
     return sales;
-  } catch (error) {
-    throw new Error(error);
   }
+  const sales = await Sale.findAll({ where: { userId: id } });
+  return sales;
 };
 
 const getOneService = async (id) => {
@@ -48,22 +44,16 @@ const getOneService = async (id) => {
       { model: User, as: 'seller' },
     ],
   });
-  console.log('SALES', sales)
   return sales;
 };
 
 const updateStatusService = async (id, status) => {
-  console.log('PRE')
-  const sale = await Sale.findByPk(id);
-  console.log('FINDBYPK')
-  console.log('first sale', sale)
-  await sale.update(
+  await Sale.update(
     { status },
     {
       where: { id },
     },
   );
-  console.log('POSTFINDBYPK')
   const updatedSale = await getOneService(id);
   return updatedSale;
 };

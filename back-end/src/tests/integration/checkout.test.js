@@ -177,8 +177,7 @@ describe('Route /checkout', () => {
     expect(chaiHttpResponse.status).to.be.equal(201);
   });
 
-  it.only('PUT should work', async () => {
-    sinon.stub(Sale, "findByPk").resolves(updateSaleBeforeMock);
+  it('PUT should work', async () => {
     sinon.stub(Sale, "update").resolves({});
     sinon.stub(Sale, "findAll").resolves(updateSaleAfterMock);
     const chaiHttpResponse = await chai

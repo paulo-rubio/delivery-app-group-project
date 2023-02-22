@@ -24,16 +24,12 @@ const getAll = async (req, res) => {
 };
 
 const updateStatus = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { status } = req.body;
+  const { id } = req.params;
+  const { status } = req.body;
 
-    const updatedStatus = await serviceCheckout.updateStatusService(id, status);
+  const updatedStatus = await serviceCheckout.updateStatusService(id, status);
 
-    res.status(200).json(updatedStatus);
-  } catch (e) {
-    res.status(500).json({ message: ERROR_MESSAGE });
-  }
+  res.status(200).json(updatedStatus);
 };
 
 const getOne = async (req, res) => {
