@@ -18,7 +18,6 @@ const STYLE_CLASSNAMES = {
 };
 
 function CheckoutForms({ totalPrice, products }) {
-  console.log(products);
   const { push } = useHistory();
   const {
     register,
@@ -29,7 +28,7 @@ function CheckoutForms({ totalPrice, products }) {
     defaultValues: {
       seller: 'Fulana Pereira',
       address: '',
-      addressNumber: '',
+      number: '',
     },
     criteriaMode: 'all',
     mode: 'onChange',
@@ -45,7 +44,6 @@ function CheckoutForms({ totalPrice, products }) {
   }, [userData, isLoading, setValue]);
 
   const onSubmit = async (formData) => {
-    console.log(formData);
     try {
       const totalPriceNumber = parseFloat(
         (Number(totalPrice.replace(',', '')) / 100).toFixed(2),
@@ -73,7 +71,6 @@ function CheckoutForms({ totalPrice, products }) {
       } = await axios.request(postOptions);
       push(`/customer/orders/${id}`);
     } catch (error) {
-      console.log(error);
       console.log(errors);
     }
   };
@@ -101,7 +98,7 @@ function CheckoutForms({ totalPrice, products }) {
             type="text"
             id="number"
             data-testid="customer_checkout__input-address-number"
-            { ...register('addressNumber', {
+            { ...register('number', {
               required: 'Número é obrigatório',
               pattern: {
                 value: /[0-9]/,

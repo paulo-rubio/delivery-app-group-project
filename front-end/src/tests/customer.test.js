@@ -5,24 +5,52 @@ import userEvent from '@testing-library/user-event';
 import App from '../App';
 import axios from 'axios';
 import { getLocalStorage, setLocalStorage } from '../utils/localStorage';
-import CustomerCheckout from '../pages/CustomerCheckout/CustomerCheckout';
 import OrderDetail from '../pages/OrderDetail/OrderDetail';
 
-// const loginMock = {
-//   data: {
-//     message: 'success',
-//     response: {
-//       name: 'Cliente zika',
-//       email: 'cliente@hotmail.com',
-//       role: 'customer',
-//       id: 5,
-//       token:
-//         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQ2xpZW50ZSB6aWthIiwiZW1haWwiOiJjbGllbnRlQGhvdG1haWwuY29tIiwicm9sZSI6ImN1c3RvbWVyIiwiaWQiOjUsImlhdCI6MTY3NzExNDA4NywiZXhwIjoxNjc4ODQyMDg3fQ.kXL3HuO5ofoiw_ZXNsvjUe0o2pgB7Kpu31jCmtqBXyA',
-//     },
-//   },
-//   status: 200,
-//   request: {},
-// };
+const consumerLoginResponse = {
+  data: {
+    message: 'success',
+    response: {
+      name: 'Cliente zika',
+      email: 'cliente@hotmail.com',
+      role: 'customer',
+      id: 5,
+      token:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQ2xpZW50ZSB6aWthIiwiZW1haWwiOiJjbGllbnRlQGhvdG1haWwuY29tIiwicm9sZSI6ImN1c3RvbWVyIiwiaWQiOjUsImlhdCI6MTY3NzE3OTM2OSwiZXhwIjoxNjc4OTA3MzY5fQ.8P0-EU-PEuUWjDCJruol77GQVNtvqLz8VIfl2EWgIvk',
+    },
+  },
+  status: 200,
+  statusText: 'OK',
+  headers: {
+    'content-length': '353',
+    'content-type': 'application/json; charset=utf-8',
+  },
+  config: {
+    transitional: {
+      silentJSONParsing: true,
+      forcedJSONParsing: true,
+      clarifyTimeoutError: false,
+    },
+    adapter: ['xhr', 'http'],
+    transformRequest: [null],
+    transformResponse: [null],
+    timeout: 0,
+    xsrfCookieName: 'XSRF-TOKEN',
+    xsrfHeaderName: 'X-XSRF-TOKEN',
+    maxContentLength: -1,
+    maxBodyLength: -1,
+    env: {},
+    headers: {
+      Accept: 'application/json, text/plain, */*',
+      'Content-Type': 'application/json',
+    },
+    port: 3001,
+    method: 'post',
+    url: 'http://localhost:3001/login',
+    data: '{"email":"cliente@hotmail.com","password":"1234567Bb"}',
+  },
+  request: {},
+};
 
 const fetchProductsMock = {
   data: [
@@ -389,11 +417,50 @@ const inTransitUpdate = {
   request: {},
 };
 
+const registerPostMock = {
+  data: {
+    response: {
+      token:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTksIm5hbWUiOiJUaGlhZ28gVGVpeGVpcmEgQmFyYm9zYSIsImVtYWlsIjoiMzIxM0AzMjEzMjEuY29tIiwicGFzc3dvcmQiOiI2NTIwMzU1NzFmNDg5YTM1NzM4NWFlZmFlZGFjZjljMSIsInJvbGUiOiJjdXN0b21lciIsImlhdCI6MTY3NzE3Nzg5NSwiZXhwIjoxNjc4OTA1ODk1fQ.cz50bvXqT6sSXPHfNRDNYUTq-xp4Yw2vNkGihv_r8BE',
+    },
+  },
+  status: 201,
+  statusText: 'Created',
+  headers: {
+    'content-length': '328',
+    'content-type': 'application/json; charset=utf-8',
+  },
+  config: {
+    transitional: {
+      silentJSONParsing: true,
+      forcedJSONParsing: true,
+      clarifyTimeoutError: false,
+    },
+    adapter: ['xhr', 'http'],
+    transformRequest: [null],
+    transformResponse: [null],
+    timeout: 0,
+    xsrfCookieName: 'XSRF-TOKEN',
+    xsrfHeaderName: 'X-XSRF-TOKEN',
+    maxContentLength: -1,
+    maxBodyLength: -1,
+    env: {},
+    headers: {
+      Accept: 'application/json, text/plain, */*',
+      'Content-Type': 'application/json',
+    },
+    method: 'post',
+    url: 'http://localhost:3001/users',
+    data: '{"name":"Thiago Teixeira Barbosa","email":"3213@321321.com","password":"321321312"}',
+  },
+  request: {},
+};
 
 
 describe('Consumer should work as intended', () => {
   afterEach(() => {
     jest.resetAllMocks();
+    localStorage.clear();
   });
 
   it('test in customer', async () => {
@@ -409,6 +476,7 @@ describe('Consumer should work as intended', () => {
         },
       })
       .mockResolvedValueOnce(forthAxiosCallMock);
+    jest.spyOn(axios, 'post').mockResolvedValueOnce(consumerLoginResponse);
     renderWithRouterAndRedux(<App />);
     
     const emailInput = screen.getByTestId('common_login__input-email');
@@ -569,7 +637,6 @@ describe('Consumer should work as intended', () => {
     });
 
     expect(finishButton).toBeEnabled()
-    // expect(spy).toHaveBeenCalledTimes(5)
     await act(async () => userEvent.click(finishButton));
     
     const orderNumber = await screen.findByTestId(
@@ -606,6 +673,146 @@ describe('Consumer should work as intended', () => {
     const inTransitBtn = screen.getByTestId("customer_order_details__button-delivery-check");
     expect(inTransitBtn).toBeEnabled();
     act(() => userEvent.click(inTransitBtn));
-    screen.debug();
+  })
+  it('should be able to register a new user successfully', async () => {
+    const spy = jest
+      .spyOn(axios, 'request')
+      .mockResolvedValueOnce(fetchProductsMock);
+    const postSpy = jest
+      .spyOn(axios, 'post')
+      .mockResolvedValueOnce(registerPostMock);
+    renderWithRouterAndRedux(<App />);
+    const signUpButton = screen.getByRole('button', { name: /sign up/i });
+    userEvent.click(signUpButton);
+
+    const fullNameInput = screen.getByTestId('common_register__input-name');
+    expect(fullNameInput).toBeInTheDocument();
+    const emailInput = screen.getByTestId('common_register__input-email');
+    expect(emailInput).toBeInTheDocument();
+    const passwordInput = screen.getByTestId('common_register__input-password');
+    expect(passwordInput).toBeInTheDocument();
+    const registerButton = screen.getByRole('button', { name: /cadastrar/i });
+    expect(registerButton).toBeInTheDocument();
+    expect(registerButton).toBeDisabled();
+
+    const invalidName = 'Thiago';
+    const validFullName = ' Barbosa';
+    const invalidEmail = 'tryber';
+    const validEmailSuffix = '@test.com';
+    const invalidPassword = '1234';
+    const validPasswordSuffix = '5678';
+
+    userEvent.type(fullNameInput, invalidName);
+    expect(fullNameInput).toHaveValue(invalidName);
+
+    userEvent.type(emailInput, invalidEmail);
+    expect(emailInput).toHaveValue(invalidEmail);
+
+    userEvent.type(passwordInput, invalidPassword);
+    expect(passwordInput).toHaveValue(invalidPassword);
+
+    const invalidNameError = await screen.findByText(
+      /nome completo deve ter pelo menos 12 letras/i,
+    );
+
+    const invalidEmailError = screen.getByText(
+      /email deve ser no formato exemplo@exemplo\.com/i,
+    );
+
+    expect(invalidNameError).toBeVisible();
+    expect(invalidEmailError).toBeVisible();
+
+    await act(async () => userEvent.type(fullNameInput, validFullName));
+
+    const invalidPasswordLengthError = screen.getByText(
+      /Password is too short!/i,
+    );
+    expect(invalidPasswordLengthError).toBeVisible();
+
+    expect(fullNameInput).toHaveValue(`${invalidName}${validFullName}`);
+
+    await act(async () => userEvent.type(emailInput, validEmailSuffix));
+    expect(emailInput).toHaveValue(`${invalidEmail}${validEmailSuffix}`);
+
+    await act(async () => userEvent.type(passwordInput, validPasswordSuffix));
+    expect(passwordInput).toHaveValue(
+      `${invalidPassword}${validPasswordSuffix}`,
+    );
+
+    expect(registerButton).toBeEnabled();
+    await act(async () => userEvent.click(registerButton));
+
+    await waitFor(async () => expect(postSpy).toHaveBeenCalled());
+  })
+  it('should not be able to register an existing user', async () => {
+    const postSpy = jest
+      .spyOn(axios, 'post')
+      .mockRejectedValueOnce({ response: { status: 409 }});
+    renderWithRouterAndRedux(<App />);
+    const signUpButton = screen.getByRole('button', { name: /sign up/i });
+    userEvent.click(signUpButton);
+
+    const fullNameInput = screen.getByTestId('common_register__input-name');
+    expect(fullNameInput).toBeInTheDocument();
+    const emailInput = screen.getByTestId('common_register__input-email');
+    expect(emailInput).toBeInTheDocument();
+    const passwordInput = screen.getByTestId('common_register__input-password');
+    expect(passwordInput).toBeInTheDocument();
+    const registerButton = screen.getByRole('button', { name: /cadastrar/i });
+    expect(registerButton).toBeInTheDocument();
+    expect(registerButton).toBeDisabled();
+
+    const invalidName = 'Thiago';
+    const validFullName = ' Barbosa';
+    const invalidEmail = 'tryber';
+    const validEmailSuffix = '@test.com';
+    const invalidPassword = '1234';
+    const validPasswordSuffix = '5678';
+
+    userEvent.type(fullNameInput, invalidName);
+    expect(fullNameInput).toHaveValue(invalidName);
+
+    userEvent.type(emailInput, invalidEmail);
+    expect(emailInput).toHaveValue(invalidEmail);
+
+    userEvent.type(passwordInput, invalidPassword);
+    expect(passwordInput).toHaveValue(invalidPassword);
+
+    const invalidNameError = await screen.findByText(
+      /nome completo deve ter pelo menos 12 letras/i,
+    );
+
+    const invalidEmailError = screen.getByText(
+      /email deve ser no formato exemplo@exemplo\.com/i,
+    );
+
+    expect(invalidNameError).toBeVisible();
+    expect(invalidEmailError).toBeVisible();
+
+    await act(async () => userEvent.type(fullNameInput, validFullName));
+
+    const invalidPasswordLengthError = screen.getByText(
+      /Password is too short!/i,
+    );
+    expect(invalidPasswordLengthError).toBeVisible();
+
+    expect(fullNameInput).toHaveValue(`${invalidName}${validFullName}`);
+
+    await act(async () => userEvent.type(emailInput, validEmailSuffix));
+    expect(emailInput).toHaveValue(`${invalidEmail}${validEmailSuffix}`);
+
+    await act(async () => userEvent.type(passwordInput, validPasswordSuffix));
+    expect(passwordInput).toHaveValue(
+      `${invalidPassword}${validPasswordSuffix}`,
+    );
+
+    expect(registerButton).toBeEnabled();
+    await act(async () => userEvent.click(registerButton));
+
+    await waitFor(async () => expect(postSpy).toHaveBeenCalled());
+    const emailAlreadyRegisteredError = screen.getByTestId(
+      'common_register__element-invalid_register',
+    );
+    expect(emailAlreadyRegisteredError).toBeVisible()
   })
 })

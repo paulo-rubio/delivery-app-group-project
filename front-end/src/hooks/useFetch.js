@@ -11,7 +11,7 @@ const useFetch = (options) => {
     const fetchData = async () => {
       try {
         const responseJSON = await axios.request(options);
-        console.log(responseJSON);
+        console.log(responseJSON)
         setRequestState((prevState) => ({
           ...prevState,
           data: responseJSON,

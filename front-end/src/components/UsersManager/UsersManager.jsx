@@ -6,7 +6,6 @@ import { getLocalStorage } from '../../utils/localStorage';
 import styles from './UsersManager.module.css';
 
 function UsersManager({ refetch, setRefetch }) {
-  console.log(refetch);
   const fetchOptions = useMemo(
     () => ({
       method: 'get',
