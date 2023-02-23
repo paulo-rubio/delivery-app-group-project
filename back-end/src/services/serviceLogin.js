@@ -23,19 +23,18 @@ const isBadRequest = ({ email, password }) => {
 };
 
 const loginService = async ({ email, password }) => {
- 
   if (isBadRequest({ email, password })) {
-    return { error: { message: "Bad request", status: 403 } };
+    return { error: { message: 'Bad request', status: 403 } };
   }
 
   const user = await findUserbyEmail(email);
 
   if (!user) {
-    return { error: { message: 'Not found', status: 404 } }
+    return { error: { message: 'Not found', status: 404 } };
   }
 
   if (user.password !== md5(password)) {
-    return { error: { message: "Wrong password", status: 401 } };
+    return { error: { message: 'Wrong password', status: 401 } };
   }
 
   const response = {

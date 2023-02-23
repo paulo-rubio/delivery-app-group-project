@@ -1,6 +1,6 @@
 const ServiceLogin = require('../services/serviceLogin');
 
-const login = async (req, res, next) => {
+const login = async (req, res) => {
   const { email, password } = req.body;
   const newLogin = await ServiceLogin.loginService({ email, password });
     if (newLogin.error) {
