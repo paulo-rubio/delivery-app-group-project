@@ -25,7 +25,6 @@ function CustomerOrders() {
             && datas?.map((index) => (
               <div className={ styles.card } key={ index.id }>
                 <CardSales order={ index } role={ role } dataTestid={ role } />
-                {' '}
               </div>
             ))}
       </div>

@@ -27,9 +27,9 @@ function CheckoutForms({ totalPrice, products }) {
     formState: { isValid, errors },
   } = useForm({
     defaultValues: {
-      seller: '',
+      seller: 'Fulana Pereira',
       address: '',
-      number: '',
+      addressNumber: '',
     },
     criteriaMode: 'all',
     mode: 'onChange',
@@ -43,8 +43,6 @@ function CheckoutForms({ totalPrice, products }) {
     setValue('seller', sellerData[0]?.id);
     return sellerData;
   }, [userData, isLoading, setValue]);
-
-  console.log('test');
 
   const onSubmit = async (formData) => {
     console.log(formData);
@@ -96,14 +94,14 @@ function CheckoutForms({ totalPrice, products }) {
             }) }
           />
         </label>
-        <label className={ styles[STYLE_CLASSNAMES.FORM_LABEL] } htmlFor="text">
+        <label className={ styles[STYLE_CLASSNAMES.FORM_LABEL] } htmlFor="number">
           Número
           <input
             className={ styles.inputs }
             type="text"
-            id="text"
+            id="number"
             data-testid="customer_checkout__input-address-number"
-            { ...register('number', {
+            { ...register('addressNumber', {
               required: 'Número é obrigatório',
               pattern: {
                 value: /[0-9]/,

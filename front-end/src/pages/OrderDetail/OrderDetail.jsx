@@ -54,6 +54,7 @@ function OrderDetail() {
     };
 
     const response = await axios.request(updateOptions);
+    console.log(response)
     setUpdatedResponse(response);
   };
   if (isLoading || !apiResponse) {
