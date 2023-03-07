@@ -1,13 +1,26 @@
 const md5 = require('md5');
+const jwt = require('jsonwebtoken');
+const jwtKey = require('fs').readFileSync('jwt.evaluation.key', {
+  encoding: 'utf-8',
+});
+const { findUserbyEmail } = require('./serviceLogin');
+
 const { User } = require('../database/models');
-const tokenGenerator = require('../middlewares/tokenGenerator');
-const existenceEmail = require('../middlewares/existenceEmail');
+
+const jwtConfig = {
+  expiresIn: '20d',
+  algorithm: 'HS256',
+};
 
 const createService = async ({ name, email, password, role }) => {
-  await existenceEmail(email);
+  const user = await findUserbyEmail(email);
+  if (user) {
+    return { error: 'User already registered' };
+  }
   const newPassword = md5(password);
-  const newUser = await User.create({ name, email, password: newPassword, role });
-  const token = tokenGenerator(newUser);
+  const { dataValues } = await User.create({ name, email, password: newPassword, role });
+  console.log(dataValues);
+  const token = jwt.sign(dataValues, jwtKey, jwtConfig);
   return { token };
 };
 

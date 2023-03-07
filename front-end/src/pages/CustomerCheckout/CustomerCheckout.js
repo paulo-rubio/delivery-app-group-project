@@ -28,15 +28,15 @@ function CustomerCheckout() {
             <CartProduct product={ product } index={ index } key={ product.id } />
           ))}
         </tbody>
-        <div className={ styles.price }>
-          <h3 className={ styles.total }>
-            {'Total: R$ '}
-            <span data-testid="customer_checkout__element-order-total-price">
-              {totalPrice}
-            </span>
-          </h3>
-        </div>
       </table>
+      <div className={ styles.price }>
+        <h3 className={ styles.total }>
+          {'Total: R$ '}
+          <span data-testid="customer_checkout__element-order-total-price">
+            {totalPrice}
+          </span>
+        </h3>
+      </div>
       <CheckoutForms totalPrice={ totalPrice } products={ cartProducts } />
     </div>
   );

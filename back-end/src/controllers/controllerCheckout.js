@@ -10,46 +10,26 @@ const getIdAndRole = (authorization) => {
 };
 
 const ERROR_MESSAGE = 'Ocorreu um erro';
-const requestId = async (req, res, next) => {
-  try {
-    const token = req.headers.authorization;
-    const data = await serviceCheckout.createSale(req.body, token);
-    return res.status(201).json({ message: 'created', response: data });
-    // const body = req.body;
-    // console.log(body);
-    // return res.status(201).json({ body });
-  } catch (err) {
-    console.log(err);
-    next(err);
-  }
+const requestId = async (req, res) => {
+  const token = req.headers.authorization;
+  const data = await serviceCheckout.createSale(req.body, token);
+  return res.status(201).json({ message: 'created', response: data });
 };
 
 const getAll = async (req, res) => {
-  try {
-    const { authorization } = req.headers;
-    const { id, role } = getIdAndRole(authorization);
-
-    const sales = await serviceCheckout.getAllService(id, role);
-    return res.status(200).json(sales);
-  } catch (e) {
-    console.log(e.message);
-    res.status(500).json({ message: ERROR_MESSAGE });
-  }
+  const { authorization } = req.headers;
+  const { id, role } = getIdAndRole(authorization);
+  const sales = await serviceCheckout.getAllService(id, role);
+  return res.status(200).json(sales);
 };
 
 const updateStatus = async (req, res) => {
-  console.log('ouch');
-  try {
-    const { id } = req.params;
-    const { status } = req.body;
+  const { id } = req.params;
+  const { status } = req.body;
 
-    const updatedStatus = await serviceCheckout.updateStatusService(id, status);
+  const updatedStatus = await serviceCheckout.updateStatusService(id, status);
 
-    res.status(200).json(updatedStatus);
-  } catch (e) {
-    console.log(e.message);
-    res.status(500).json({ message: ERROR_MESSAGE });
-  }
+  res.status(200).json(updatedStatus);
 };
 
 const getOne = async (req, res) => {
@@ -58,7 +38,6 @@ const getOne = async (req, res) => {
     const sales = await serviceCheckout.getOneService(id);
     return res.status(200).json(sales);
   } catch (e) {
-    console.log(e.message);
     res.status(500).json({ message: ERROR_MESSAGE });
   }
 };

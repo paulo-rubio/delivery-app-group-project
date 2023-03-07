@@ -18,7 +18,6 @@ const STYLE_CLASSNAMES = {
 };
 
 function CheckoutForms({ totalPrice, products }) {
-  console.log(products);
   const { push } = useHistory();
   const {
     register,
@@ -27,7 +26,7 @@ function CheckoutForms({ totalPrice, products }) {
     formState: { isValid, errors },
   } = useForm({
     defaultValues: {
-      seller: '',
+      seller: 'Fulana Pereira',
       address: '',
       number: '',
     },
@@ -44,10 +43,7 @@ function CheckoutForms({ totalPrice, products }) {
     return sellerData;
   }, [userData, isLoading, setValue]);
 
-  console.log('test');
-
   const onSubmit = async (formData) => {
-    console.log(formData);
     try {
       const totalPriceNumber = parseFloat(
         (Number(totalPrice.replace(',', '')) / 100).toFixed(2),
@@ -75,7 +71,6 @@ function CheckoutForms({ totalPrice, products }) {
       } = await axios.request(postOptions);
       push(`/customer/orders/${id}`);
     } catch (error) {
-      console.log(error);
       console.log(errors);
     }
   };
@@ -96,12 +91,12 @@ function CheckoutForms({ totalPrice, products }) {
             }) }
           />
         </label>
-        <label className={ styles[STYLE_CLASSNAMES.FORM_LABEL] } htmlFor="text">
+        <label className={ styles[STYLE_CLASSNAMES.FORM_LABEL] } htmlFor="number">
           Número
           <input
             className={ styles.inputs }
             type="text"
-            id="text"
+            id="number"
             data-testid="customer_checkout__input-address-number"
             { ...register('number', {
               required: 'Número é obrigatório',

@@ -15,33 +15,25 @@ const createSaleProducts = async (products, saleId) => {
 };
 
 const createSale = async (body, token) => {
-  try {
-    const decode = await decodeToken(token);
-    const { products, ...rest } = body;
-    const date = new Date();
-    const statusMessage = rest.status || 'Pendente';
-    const {
-      dataValues: { id: userId },
-    } = await User.findOne({ where: { name: decode.name } });
-    const data = await Sale.create({ ...rest, saleDate: date, status: statusMessage, userId });
-    await createSaleProducts(products, data.id);
-    return { data };
-  } catch (err) {
-    console.log(err);
-  }
+  const decode = await decodeToken(token);
+  const { products, ...rest } = body;
+  const date = new Date();
+  const statusMessage = rest.status || 'Pendente';
+  const {
+    dataValues: { id: userId },
+  } = await User.findOne({ where: { name: decode.name } });
+  const data = await Sale.create({ ...rest, saleDate: date, status: statusMessage, userId });
+  await createSaleProducts(products, data.id);
+  return { data };
 };
 
 const getAllService = async (id, role) => {
-  try {
-    if (role === 'seller') {
-      const sales = await Sale.findAll();
-      return sales;
-    }
-    const sales = await Sale.findAll({ where: { userId: id } });
+  if (role === 'seller') {
+    const sales = await Sale.findAll();
     return sales;
-  } catch (error) {
-    throw new Error(error);
   }
+  const sales = await Sale.findAll({ where: { userId: id } });
+  return sales;
 };
 
 const getOneService = async (id) => {
@@ -56,20 +48,14 @@ const getOneService = async (id) => {
 };
 
 const updateStatusService = async (id, status) => {
-  console.log(id, status);
-  try {
-    const sale = await Sale.findByPk(id);
-    await sale.update(
-      { status },
-      {
-        where: { id },
-      },
-    );
-    const updatedSale = await getOneService(id);
-    return updatedSale;
-  } catch (error) {
-    throw new Error(error);
-  }
+  await Sale.update(
+    { status },
+    {
+      where: { id },
+    },
+  );
+  const updatedSale = await getOneService(id);
+  return updatedSale;
 };
 
 module.exports = {
