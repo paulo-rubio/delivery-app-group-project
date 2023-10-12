@@ -1,4 +1,4 @@
-import { act, findByText, fireEvent, waitFor } from '@testing-library/react';
+import { act, fireEvent, waitFor } from '@testing-library/react';
 import * as axios from 'axios';
 import userEvent from '@testing-library/user-event';
 import App from '../App';
@@ -6,11 +6,21 @@ import App from '../App';
 // import CustomerProducts from '../pages/CustomerProducts/CustomerProducts';
 import renderWithRouterAndRedux from './utils/renderWithRouter';
 
-const products = [{ id: 1,
+const cartProducts = [{
+  id: 1,
   name: 'Skol Lata 250ml',
-  price: 2.20,
+  price: '2.20',
   quantity: 1,
-  urlImage: 'http://localhost:3001/images/skol_lata_350ml.jpg' }];
+  urlImage: 'http://localhost:3001/images/skol_lata_350ml.jpg',
+}];
+
+const seller = { data: [{
+  id: 6,
+  email: 'vendedor@hotmail.com',
+  name: 'Vendedor zika',
+  password: 'fee8bc8bb31d184765fa7f7886257cfb',
+  role: 'seller',
+}] };
 
 // const table = {
 //   data: [{
@@ -27,7 +37,6 @@ const tableName = 'customer_checkout__element-order-table-name-0';
 const tableQnt = 'customer_checkout__element-order-table-quantity-0';
 const tableValueUnit = 'customer_checkout__element-order-table-unit-price-0';
 const tabelTotalPrice = 'customer_checkout__element-order-table-sub-total-0';
-const remove = 'customer_checkout__element-order-table-remove-0';
 
 const inputAdress = 'customer_checkout__input-address';
 const inputAdresnumber = 'customer_checkout__input-address-number';
@@ -54,8 +63,8 @@ describe('testing in customerCheckout', () => {
     );
   });
   test('testing in inputs', async () => {
-    axios.request.mockResolvedValue(products);
-    const page = renderWithRouterAndRedux(<App />);
+    // axios.request.mockResolvedValue(cartProducts);
+    const page = renderWithRouterAndRedux(<App />, { cart: { cartProducts } });
     page.history.push(rote);
     const { getByTestId } = page;
     const getSeller = getByTestId(inputSeller);
@@ -83,38 +92,42 @@ describe('testing in customerCheckout', () => {
     expect(submit).toBeDefined();
   });
   test('in cartProduct', async () => {
-    axios.request.mockResolvedValue(products);
-
-    const page = renderWithRouterAndRedux(<App />);
+    const page = renderWithRouterAndRedux(<App />, { cart: { cartProducts } });
     page.history.push(rote);
     const { findByTestId } = page;
-    const name = findByTestId(tableName);
+    const name = await findByTestId(tableName);
+    // console.log(name);
     const item = findByTestId(tableItem);
     const qnt = findByTestId(tableQnt);
     const valueUnit = findByTestId(tableValueUnit);
-    // const totalPrice = findByTestId(tabelTotalPrice);
+    const totalPrice = findByTestId(tabelTotalPrice);
 
     expect(name).toBeDefined();
     expect(item).toBeDefined();
     expect(qnt).toBeDefined();
     expect(valueUnit).toBeDefined();
-    // expect(totalPrice).toBeDefined();
+    expect(totalPrice).toBeDefined();
   });
   test('in remove cartProduct', async () => {
-    axios.request.mockResolvedValue(products);
-    const page = renderWithRouterAndRedux(<App />);
+    axios.request.mockResolvedValue(seller);
+
+    const page = renderWithRouterAndRedux(<App />, { cart: { cartProducts } });
     page.history.push(rote);
-    const { getByRole } = page;
+    const { findByRole, findByText } = page;
 
-    const button = getByRole('button', /remover/i);
-
+    const button = await findByRole('button', /Remover/i);
     await waitFor(() => userEvent.click(button));
-    // const rows = getByRole('row');
-    // expect(rows).toBe(0);
+    const name = await findByText('0,00');
+
+    expect(name).toBeDefined();
+  });
+  test('', async () => {
+    axios.request.mockResolvedValue(seller);
+    const page = renderWithRouterAndRedux(<App />, { cart: { cartProducts } });
+    page.history.push(rote);
   });
 });
 
 // duvidas para segunda:
 // estou com muita dificuldade em testar as rotas, talvez seja por eu não ter entendido ainda como funciona os data: e qual dado preciso mocar
 // não consigo testar a parte de erro dos registros;
-// não consigo testar o redux;
